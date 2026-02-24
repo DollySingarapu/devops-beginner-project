@@ -1,0 +1,2 @@
+# Ignore minikube cache
+.minikube/
