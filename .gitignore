@@ -1,0 +1,15 @@
+# Ignore minikube cache
+.minikube/
+.minikube/
+.ssh/
+.bash_history
+Jenkins-Zero-To-Hero/
+practice-shell/
+.bash_history
+.cache/
+.local/
+.ssh/
+Jenkins-Zero-To-Hero/
+bfg.jar
+practice-shell/
+devops-beginner-project-backup/
