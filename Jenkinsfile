@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        # Use the kubeconfig we set up for Jenkins
+       
         KUBECONFIG = '/var/lib/jenkins/.kube/config'
     }
 
