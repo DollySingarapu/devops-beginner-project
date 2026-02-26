@@ -1,27 +1,52 @@
 pipeline {
-  agent any
-  environment {
-    KUBECONFIG = '/var/lib/jenkins/.kube/config'
-}
+    agent any
 
-  stages {
-    stage('Clone') {
-      steps {
-        git 'https://github.com/DollySingarapu/devops-beginner-project.git'
-      }
+    environment {
+        # Use the kubeconfig we set up for Jenkins
+        KUBECONFIG = '/var/lib/jenkins/.kube/config'
     }
 
-    stage('Build Docker Image') {
-      steps {
-        sh 'docker build -t devops-app .'
-      }
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/DollySingarapu/devops-beginner-project.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh """
+                        docker build -t devops-beginner:latest .
+                    """
+                }
+            }
+        }
+
+        stage('Deploy to Minikube') {
+            steps {
+                script {
+                    sh """
+                        # Check kubectl access
+                        kubectl get nodes
+                        
+                        # Apply Kubernetes manifests
+                        kubectl apply -f deployment.yaml
+                        
+                        # Optional: show pods
+                        kubectl get pods
+                    """
+                }
+            }
+        }
     }
 
-    stage('Deploy to Kubernetes') {
-      steps {
-        sh 'kubectl apply -f deployment.yaml'
-        sh 'kubectl apply -f service.yaml'
-      }
+    post {
+        success {
+            echo "✅ Deployment to Minikube succeeded!"
+        }
+        failure {
+            echo "❌ Deployment failed. Check logs!"
+        }
     }
-  }
 }
